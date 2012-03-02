@@ -28,10 +28,20 @@
     return _brain;
 }
 
+-(NSMutableArray *) sentStack
+{
+    if (_sentStack == nil) _sentStack = [[NSMutableArray alloc] init];
+        return _sentStack;
+}
+
 - (IBAction)digitPressed:(UIButton *)sender 
 {
     NSString *digit = sender.currentTitle;
+    
+    //sending digit to sentStack
     [self.sentStack addObject:digit];
+    NSLog(@"array: %@", self.sentStack);
+    
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
