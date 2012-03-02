@@ -40,7 +40,6 @@
     
     //sending digit to sentStack
     [self.sentStack addObject:digit];
-    NSLog(@"array: %@", self.sentStack);
     
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text stringByAppendingString:digit];
@@ -61,8 +60,8 @@
     NSString *operation = sender.currentTitle;
     [self.sentStack addObject:operation];
     NSString *sent = [[self.sentStack valueForKey:@"description"] componentsJoinedByString:@" "];
-    if (sent == nil) {
-        self.sentdisplay.text = @"nope";
+    if (sender.currentTitle == 0) {
+        self.sentdisplay.text = @"0";
     } else {
         self.sentdisplay.text = sent;
     }

@@ -52,7 +52,11 @@
     } else if ([@"π" isEqualToString:operation]) {
         [self pushOperand:(3.142)];
         result = 3.142;
+    } else if ([@"c" isEqualToString:operation]) {
+        self.operandStack = nil;
+        result = 0;
     }
+    
     
     [self pushOperand:result];
     return result;   
