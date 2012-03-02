@@ -11,7 +11,8 @@
 
 @interface CalculatorViewController()
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
-@property (nonatomic, strong) CalculatorBrain *brain;
+@property (nonatomic, strong) CalculatorBrain *brain; 
+@property (nonatomic, strong) NSMutableArray *sentStack;
 @end
 
 @implementation CalculatorViewController
@@ -19,6 +20,7 @@
 @synthesize sentdisplay = _sentdisplay;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
+@synthesize sentStack = _sentStack;
 
 -(CalculatorBrain *)brain
 {
@@ -29,6 +31,7 @@
 - (IBAction)digitPressed:(UIButton *)sender 
 {
     NSString *digit = sender.currentTitle;
+    [self.sentStack addObject:digit];
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
@@ -45,11 +48,20 @@
 
 - (IBAction)operationPressed:(UIButton *)sender 
 {
+    NSString *operation = sender.currentTitle;
+    [self.sentStack addObject:operation];
+    NSString *sent = [[self.sentStack valueForKey:@"description"] componentsJoinedByString:@" "];
+    if (sent == nil) {
+        self.sentdisplay.text = @"nope";
+    } else {
+        self.sentdisplay.text = sent;
+    }
+    
     if (self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
     double result = [self.brain performOperation:sender.currentTitle];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
-    self.sentdisplay.text = [self.brain operandStack];
+  
 }
 
 - (void)viewDidUnload {
