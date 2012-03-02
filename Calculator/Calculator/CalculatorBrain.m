@@ -50,7 +50,8 @@
     } else if ([@"sin" isEqualToString:operation]) {
         result = sin([self popOperand]);
     } else if ([@"π" isEqualToString:operation]) {
-        
+        [self pushOperand:(3.142)];
+        result = 3.142;
     }
     
     [self pushOperand:result];

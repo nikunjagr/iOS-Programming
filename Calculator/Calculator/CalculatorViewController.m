@@ -16,6 +16,7 @@
 
 @implementation CalculatorViewController
 @synthesize display = _display;
+@synthesize sentdisplay = _sentdisplay;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
 
@@ -48,6 +49,11 @@
     double result = [self.brain performOperation:sender.currentTitle];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
+    self.sentdisplay.text = [self.brain operandStack];
 }
 
+- (void)viewDidUnload {
+    [self setSentdisplay:nil];
+    [super viewDidUnload];
+}
 @end
