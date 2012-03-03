@@ -38,9 +38,6 @@
 {
     NSString *digit = sender.currentTitle;
     
-    //sending digit to sentStack
-    [self.sentStack addObject:digit];
-    
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
@@ -57,15 +54,6 @@
 
 - (IBAction)operationPressed:(UIButton *)sender 
 {
-    NSString *operation = sender.currentTitle;
-    [self.sentStack addObject:operation];
-    NSString *sent = [[self.sentStack valueForKey:@"description"] componentsJoinedByString:@" "];
-    if (sender.currentTitle == 0) {
-        self.sentdisplay.text = @"0";
-    } else {
-        self.sentdisplay.text = sent;
-    }
-    
     if (self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
     double result = [self.brain performOperation:sender.currentTitle];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
