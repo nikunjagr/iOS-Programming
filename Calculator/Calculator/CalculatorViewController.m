@@ -11,6 +11,7 @@
 
 @interface CalculatorViewController()
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
+@property (nonatomic) BOOL isVariable;
 @property (nonatomic, strong) CalculatorBrain *brain; 
 @property (nonatomic, strong) NSMutableArray *sentStack;
 @end
@@ -19,6 +20,7 @@
 @synthesize display = _display;
 @synthesize sentdisplay = _sentdisplay;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
+@synthesize isVariable = _isVariable;
 @synthesize brain = _brain;
 @synthesize sentStack = _sentStack;
 
@@ -47,15 +49,38 @@
     
 }
 
+- (IBAction)variablePressed:(UIButton *)sender
+{
+    NSString *variable = sender.currentTitle;
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        self.display.text = [self.display.text stringByAppendingString:variable];
+    } else {
+        self.display.text = variable;
+        self.userIsInTheMiddleOfEnteringANumber = YES;
+    }
+    self.isVariable = YES;
+}
+
 - (IBAction)enterPressed {
-    [self.brain pushOperand:[self.display.text doubleValue]];
+    // surely a more efficient way of writing this code?
+    NSString *val = [[NSString alloc] init];
+    val = self.display.text;
+    
+    if (self.isVariable == YES) {
+        [self.brain pushVariable:val];
+    } else {
+        [self.brain pushOperand:[val doubleValue]];
+    }
     self.userIsInTheMiddleOfEnteringANumber = NO;
+    self.isVariable = NO;
 }
 
 - (IBAction)operationPressed:(UIButton *)sender 
 {
-    if (self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
-    double result = [self.brain performOperation:sender.currentTitle];
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        [self enterPressed];   
+    }
+    double result = [self.brain doCalculation:sender.currentTitle];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
   

@@ -10,10 +10,12 @@
 
 @interface CalculatorBrain()
 @property (nonatomic, strong) NSMutableArray *programStack;
+@property (nonatomic, strong) NSMutableDictionary *variableValues;
 @end
 
 @implementation CalculatorBrain
 @synthesize programStack = _programStack;
+@synthesize variableValues = _variableValues;
 
 -(NSMutableArray *) programStack
 {
@@ -21,15 +23,34 @@
     return _programStack;
 }
 
+-(NSMutableDictionary *) variableValues
+{
+    _variableValues = [[NSMutableDictionary alloc] init];
+    [_variableValues setObject:[NSNumber numberWithDouble:5] forKey: @"~x"];
+    [_variableValues setObject:[NSNumber numberWithDouble:10] forKey:@"~y"];
+    [_variableValues setObject:[NSNumber numberWithDouble:25] forKey:@"~foo"];
+    
+    return _variableValues;
+}
+
 -(void)pushOperand:(double)operand
 {
     [self.programStack addObject:[NSNumber numberWithDouble:operand]];
+
 }
 
--(double)performOperation:(NSString *)operation
+-(void)pushVariable:(NSString *)variable
+{
+    NSString *var = [@"~" stringByAppendingString:variable];
+    [self.programStack addObject:var];
+    NSLog(@":stack - %@", self.programStack);
+}
+
+-(double)doCalculation:(NSString *)operation
 {
     [self.programStack addObject:operation];
-    return [CalculatorBrain runProgram:self.program];
+    return [CalculatorBrain runProgram:self.program
+                   usingVariableValues:self.variableValues];
 }
 
 -(id)program
@@ -68,11 +89,23 @@
 }
 
 + (double)runProgram:(id)program
+ usingVariableValues:(NSDictionary *)variableValues;
+
 {
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
     }
+        
+    for (id __strong obj in program) {
+        if ([obj isKindOfClass:[NSString class]] && [obj hasPrefix:@"~"]) {
+            [stack addObject:[variableValues valueForKey:obj]];
+        } else {
+            [stack addObject:obj];
+        }
+    }
+    
+    NSLog(@"the program stack is %@", stack);
     return [self popOperandOffStack:stack];
 }
 
