@@ -13,6 +13,7 @@
 -(void)pushOperand:(double)value;
 -(void)pushVariable:(NSString *)variable;
 -(double)doCalculation:(NSString *)calculation;
+-(NSString *)descript;
 
 @property (readonly) id program;
 
@@ -21,4 +22,5 @@
 
 
 + (NSString *)descriptionOfProgram:(id)program;
++ (NSString *)descriptionOfTopOfStack:(NSMutableArray *)stack;
 @end

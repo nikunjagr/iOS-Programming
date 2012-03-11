@@ -17,6 +17,7 @@
 @synthesize programStack = _programStack;
 @synthesize variableValues = _variableValues;
 
+
 -(NSMutableArray *) programStack
 {
     if (_programStack == nil) _programStack = [[NSMutableArray alloc] init];
@@ -53,6 +54,11 @@
                    usingVariableValues:self.variableValues];
 }
 
+-(NSString *)descript
+{
+    return [CalculatorBrain descriptionOfProgram:self.program];
+}
+
 -(id)program
 {
     return [self.programStack copy];
@@ -60,8 +66,38 @@
 
 + (NSString *)descriptionOfProgram:(id)program
 {
-    return @"Implement this in Assignment 2";
+    NSMutableArray *stack;
+    if ([program isKindOfClass:[NSArray class]]) {
+        stack = [program mutableCopy];
+    }
+    return [self descriptionOfTopOfStack:stack];
 }
+
++ (NSString *)descriptionOfTopOfStack:(NSMutableArray *)stack
+{
+    NSSet *operations = [NSSet setWithObjects:@"+", @"-", @"/", @"*", nil];
+    NSMutableString *description = [[NSMutableString alloc] init];
+    NSString *expression = [[NSString alloc] init];
+ 
+    id topOfStack = [stack lastObject]; 
+    if (topOfStack) [stack removeLastObject];
+    
+    if ([topOfStack isKindOfClass:[NSNumber class]]) {
+        return [topOfStack stringValue];
+        NSLog(@"value: %@", expression);
+    } 
+    
+    else if ([operations containsObject:topOfStack]) {
+        NSLog(@"descript now: %@", description);
+        [description appendString:[self descriptionOfTopOfStack:stack]];
+        [description insertString:topOfStack atIndex:0];
+        [description insertString:[self descriptionOfTopOfStack:stack] atIndex:0];
+        NSLog(@"description: %@", description);
+    }
+    
+    return description;
+}
+
 
 + (double)popOperandOffStack:(NSMutableArray *)stack
 {

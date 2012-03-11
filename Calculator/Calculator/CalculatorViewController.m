@@ -83,6 +83,7 @@
     double result = [self.brain doCalculation:sender.currentTitle];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
+    [self.brain descript];
   
 }
 
